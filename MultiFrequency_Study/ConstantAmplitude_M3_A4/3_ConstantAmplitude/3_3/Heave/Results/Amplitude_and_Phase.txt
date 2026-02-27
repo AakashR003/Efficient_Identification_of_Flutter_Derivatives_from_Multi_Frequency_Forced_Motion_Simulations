@@ -1,0 +1,99 @@
+Amplitude and Phase Data of Signals
+===================================
+Frequency        : 0.8
+Reduced Velocity : 3.4153005464480874
+Heave Amplitude  : 0.0183
+Fy Amplitude     : 0.0759606958786414
+Phase Fy         : 1.210462425029382
+Moment Amplitude : 0.006612487418092545
+Phase Mx         : -1.591571034608024
+
+
+Amplitude and Phase Data of Signals
+===================================
+Frequency        : 1.6
+Reduced Velocity : 1.7076502732240437
+Heave Amplitude  : 0.0183
+Fy Amplitude     : 0.23409519085455308
+Phase Fy         : 0.4607404402025015
+Moment Amplitude : 0.01482819708430017
+Phase Mx         : -1.6017998922041354
+
+
+Amplitude and Phase Data of Signals
+===================================
+Frequency        : 3.2
+Reduced Velocity : 0.8538251366120219
+Heave Amplitude  : 0.0183
+Fy Amplitude     : 0.8254723350452932
+Phase Fy         : 0.15065248144192278
+Moment Amplitude : 0.03281522403987539
+Phase Mx         : -1.7761626621829762
+
+
+Amplitude and Phase Data of Signals
+===================================
+Frequency        : 0.8
+Reduced Velocity : 3.4153005464480874
+Heave Amplitude  : 0.0183
+Fy Amplitude     : 0.0759606958786414
+Phase Fy         : 1.210462425029382
+Moment Amplitude : 0.006612487418092545
+Phase Mx         : -1.591571034608024
+
+
+Amplitude and Phase Data of Signals
+===================================
+Frequency        : 1.6
+Reduced Velocity : 1.7076502732240437
+Heave Amplitude  : 0.0183
+Fy Amplitude     : 0.23409519085455308
+Phase Fy         : 0.4607404402025015
+Moment Amplitude : 0.01482819708430017
+Phase Mx         : -1.6017998922041354
+
+
+Amplitude and Phase Data of Signals
+===================================
+Frequency        : 3.2
+Reduced Velocity : 0.8538251366120219
+Heave Amplitude  : 0.0183
+Fy Amplitude     : 0.8254723350452932
+Phase Fy         : 0.15065248144192278
+Moment Amplitude : 0.03281522403987539
+Phase Mx         : -1.7761626621829762
+
+
+Amplitude and Phase Data of Signals
+===================================
+Frequency        : 0.8
+Reduced Velocity : 3.4153005464480874
+Heave Amplitude  : 0.0183
+Fy Amplitude     : 0.0759606958786414
+Phase Fy         : 1.210462425029382
+Moment Amplitude : 0.006612487418092545
+Phase Mx         : -1.591571034608024
+
+
+Amplitude and Phase Data of Signals
+===================================
+Frequency        : 1.6
+Reduced Velocity : 1.7076502732240437
+Heave Amplitude  : 0.0183
+Fy Amplitude     : 0.23409519085455308
+Phase Fy         : 0.4607404402025015
+Moment Amplitude : 0.01482819708430017
+Phase Mx         : -1.6017998922041354
+
+
+Amplitude and Phase Data of Signals
+===================================
+Frequency        : 3.2
+Reduced Velocity : 0.8538251366120219
+Heave Amplitude  : 0.0183
+Fy Amplitude     : 0.8254723350452932
+Phase Fy         : 0.15065248144192278
+Moment Amplitude : 0.03281522403987539
+Phase Mx         : -1.7761626621829762
+
+

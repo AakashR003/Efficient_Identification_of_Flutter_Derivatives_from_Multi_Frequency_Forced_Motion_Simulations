@@ -1,0 +1,9 @@
+Amplitude and Phase Data of Signals
+===================================
+Frequency        : 0.8
+Reduced Velocity : 3.4153005464480874
+Tita Amplitude   : 0.017
+Fy Amplitude     : 0.00881339028243189
+Phase Fy         : 2.8970291212909967
+Moment Amplitude : 0.001149836489213547
+Phase Mx         : 0.0713053073751917

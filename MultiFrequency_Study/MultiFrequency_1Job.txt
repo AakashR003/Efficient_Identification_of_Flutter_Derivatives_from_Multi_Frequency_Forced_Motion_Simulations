@@ -1,0 +1,225 @@
+#!/bin/bash
+#SBATCH -J TestJob
+#SBATCH -o "/dss/dsshome1/07/ge53liv2/Thesis_Wind/MultiFrequency_Study/%x.%j.out"
+#SBATCH -e "/dss/dsshome1/07/ge53liv2/Thesis_Wind/MultiFrequency_Study/%x.%j.err"
+#SBATCH -D "/dss/dsshome1/07/ge53liv2/Thesis_Wind/MultiFrequency_Study"
+
+#SBATCH --get-user-env
+#SBATCH --clusters=cm4
+#SBATCH --partition=cm4_tiny
+
+#SBATCH --nodes=1
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=112
+
+#SBATCH --mail-type=BEGIN,END,FAIL
+#SBATCH --mail-user=aakash.ravichandran@tum.de
+#SBATCH --time=10:00:00
+
+
+# Load environment
+module load slurm_setup
+source $HOME/setup_files/kratos_coolmuc4_environment.sh
+
+export OMP_PROC_BIND=TRUE
+
+
+# -------------------------------
+# Get available CPUs dynamically
+# -------------------------------
+AVAILABLE_CPUS=$(taskset -cp $$ | grep -oP '(?<=list: ).*')
+echo "Available CPUs: $AVAILABLE_CPUS"
+
+IFS=',' read -ra CPU_RANGES <<< "$AVAILABLE_CPUS"
+CPU_LIST=()
+for range in "${CPU_RANGES[@]}"; do
+    if [[ $range == *-* ]]; then
+        start=${range%-*}
+        end=${range#*-}
+        for ((i=start; i<=end; i++)); do
+            CPU_LIST+=($i)
+        done
+    else
+        CPU_LIST+=($range)
+    fi
+done
+
+echo "Total available CPUs: ${#CPU_LIST[@]}"
+
+if [ ${#CPU_LIST[@]} -lt 112 ]; then
+    echo "ERROR: Need 112 CPUs, only have ${#CPU_LIST[@]}"
+    exit 1
+fi
+
+
+# -------------------------------
+# Function to get CPU range
+# -------------------------------
+get_cpu_range() {
+    local start_idx=$1
+    local count=$2
+    local cpus=""
+    for ((i=0; i<count; i++)); do
+        if [ $i -eq 0 ]; then
+            cpus="${CPU_LIST[$((start_idx+i))]}"
+        else
+            cpus="$cpus,${CPU_LIST[$((start_idx+i))]}"
+        fi
+    done
+    echo $cpus
+}
+
+
+# -------------------------------
+# Run parallel simulations
+# -------------------------------
+
+THREADS=7
+
+if [ $SLURM_PROCID == "0" ]; then
+
+# --------------------------------------------------------------
+# 1_1
+CPUS_00=$(get_cpu_range   0 $THREADS)
+OMP_NUM_THREADS=$THREADS GOMP_CPU_AFFINITY="$CPUS_00" taskset --cpu-list $CPUS_00 python3 ConstantAmplitude/1_ConstantAmplitude/1_1/Heave/MainKratos.py &> ConstantAmplitude/1_ConstantAmplitude/1_1/Heave/Simulation.log &
+
+CPUS_01=$(get_cpu_range   7 $THREADS)
+OMP_NUM_THREADS=$THREADS GOMP_CPU_AFFINITY="$CPUS_01" taskset --cpu-list $CPUS_01 python3 ConstantAmplitude/1_ConstantAmplitude/1_1/Pitch/MainKratos.py &> ConstantAmplitude/1_ConstantAmplitude/1_1/Pitch/Simulation.log &
+
+# 1_2
+CPUS_02=$(get_cpu_range  14 $THREADS)
+OMP_NUM_THREADS=$THREADS GOMP_CPU_AFFINITY="$CPUS_02" taskset --cpu-list $CPUS_02 python3 ConstantAmplitude/1_ConstantAmplitude/1_2/Heave/MainKratos.py &> ConstantAmplitude/1_ConstantAmplitude/1_2/Heave/Simulation.log &
+
+CPUS_03=$(get_cpu_range  21 $THREADS)
+OMP_NUM_THREADS=$THREADS GOMP_CPU_AFFINITY="$CPUS_03" taskset --cpu-list $CPUS_03 python3 ConstantAmplitude/1_ConstantAmplitude/1_2/Pitch/MainKratos.py &> ConstantAmplitude/1_ConstantAmplitude/1_2/Pitch/Simulation.log &
+
+# 1_3
+CPUS_04=$(get_cpu_range  28 $THREADS)
+OMP_NUM_THREADS=$THREADS GOMP_CPU_AFFINITY="$CPUS_04" taskset --cpu-list $CPUS_04 python3 ConstantAmplitude/1_ConstantAmplitude/1_3/Heave/MainKratos.py &> ConstantAmplitude/1_ConstantAmplitude/1_3/Heave/Simulation.log &
+
+CPUS_05=$(get_cpu_range  35 $THREADS)
+OMP_NUM_THREADS=$THREADS GOMP_CPU_AFFINITY="$CPUS_05" taskset --cpu-list $CPUS_05 python3 ConstantAmplitude/1_ConstantAmplitude/1_3/Pitch/MainKratos.py &> ConstantAmplitude/1_ConstantAmplitude/1_3/Pitch/Simulation.log &
+
+# 1_4
+CPUS_06=$(get_cpu_range  42 $THREADS)
+OMP_NUM_THREADS=$THREADS GOMP_CPU_AFFINITY="$CPUS_06" taskset --cpu-list $CPUS_06 python3 ConstantAmplitude/1_ConstantAmplitude/1_4/Heave/MainKratos.py &> ConstantAmplitude/1_ConstantAmplitude/1_4/Heave/Simulation.log &
+
+CPUS_07=$(get_cpu_range  49 $THREADS)
+OMP_NUM_THREADS=$THREADS GOMP_CPU_AFFINITY="$CPUS_07" taskset --cpu-list $CPUS_07 python3 ConstantAmplitude/1_ConstantAmplitude/1_4/Pitch/MainKratos.py &> ConstantAmplitude/1_ConstantAmplitude/1_4/Pitch/Simulation.log &
+
+# 1_5
+CPUS_08=$(get_cpu_range  56 $THREADS)
+OMP_NUM_THREADS=$THREADS GOMP_CPU_AFFINITY="$CPUS_08" taskset --cpu-list $CPUS_08 python3 ConstantAmplitude/1_ConstantAmplitude/1_5/Heave/MainKratos.py &> ConstantAmplitude/1_ConstantAmplitude/1_5/Heave/Simulation.log &
+
+CPUS_09=$(get_cpu_range  63 $THREADS)
+OMP_NUM_THREADS=$THREADS GOMP_CPU_AFFINITY="$CPUS_09" taskset --cpu-list $CPUS_09 python3 ConstantAmplitude/1_ConstantAmplitude/1_5/Pitch/MainKratos.py &> ConstantAmplitude/1_ConstantAmplitude/1_5/Pitch/Simulation.log &
+
+# 1_6
+CPUS_10=$(get_cpu_range  70 $THREADS)
+OMP_NUM_THREADS=$THREADS GOMP_CPU_AFFINITY="$CPUS_10" taskset --cpu-list $CPUS_10 python3 ConstantAmplitude/1_ConstantAmplitude/1_6/Heave/MainKratos.py &> ConstantAmplitude/1_ConstantAmplitude/1_6/Heave/Simulation.log &
+
+CPUS_11=$(get_cpu_range  77 $THREADS)
+OMP_NUM_THREADS=$THREADS GOMP_CPU_AFFINITY="$CPUS_11" taskset --cpu-list $CPUS_11 python3 ConstantAmplitude/1_ConstantAmplitude/1_6/Pitch/MainKratos.py &> ConstantAmplitude/1_ConstantAmplitude/1_6/Pitch/Simulation.log &
+
+# 1_7
+CPUS_12=$(get_cpu_range  84 $THREADS)
+OMP_NUM_THREADS=$THREADS GOMP_CPU_AFFINITY="$CPUS_12" taskset --cpu-list $CPUS_12 python3 ConstantAmplitude/1_ConstantAmplitude/1_7/Heave/MainKratos.py &> ConstantAmplitude/1_ConstantAmplitude/1_7/Heave/Simulation.log &
+
+CPUS_13=$(get_cpu_range  91 $THREADS)
+OMP_NUM_THREADS=$THREADS GOMP_CPU_AFFINITY="$CPUS_13" taskset --cpu-list $CPUS_13 python3 ConstantAmplitude/1_ConstantAmplitude/1_7/Pitch/MainKratos.py &> ConstantAmplitude/1_ConstantAmplitude/1_7/Pitch/Simulation.log &
+
+# 1_8
+CPUS_14=$(get_cpu_range  98 $THREADS)
+OMP_NUM_THREADS=$THREADS GOMP_CPU_AFFINITY="$CPUS_14" taskset --cpu-list $CPUS_14 python3 ConstantAmplitude/1_ConstantAmplitude/1_8/Heave/MainKratos.py &> ConstantAmplitude/1_ConstantAmplitude/1_8/Heave/Simulation.log &
+
+CPUS_15=$(get_cpu_range 105 $THREADS)
+OMP_NUM_THREADS=$THREADS GOMP_CPU_AFFINITY="$CPUS_15" taskset --cpu-list $CPUS_15 python3 ConstantAmplitude/1_ConstantAmplitude/1_8/Pitch/MainKratos.py &> ConstantAmplitude/1_ConstantAmplitude/1_8/Pitch/Simulation.log &
+
+
+
+
+
+
+
+
+
+
+# 1_1
+CPUS_00=$(get_cpu_range   0 $THREADS)
+OMP_NUM_THREADS=$THREADS GOMP_CPU_AFFINITY="$CPUS_00" taskset --cpu-list $CPUS_00 python3 ConstantAmplitude/1_ConstantAmplitude/1_1/Heave/MainKratos.py &> /dev/null 2>&1 &
+
+CPUS_01=$(get_cpu_range   7 $THREADS)
+OMP_NUM_THREADS=$THREADS GOMP_CPU_AFFINITY="$CPUS_01" taskset --cpu-list $CPUS_01 python3 ConstantAmplitude/1_ConstantAmplitude/1_1/Pitch/MainKratos.py &> /dev/null 2>&1 &
+
+# 1_2
+CPUS_02=$(get_cpu_range  14 $THREADS)
+OMP_NUM_THREADS=$THREADS GOMP_CPU_AFFINITY="$CPUS_02" taskset --cpu-list $CPUS_02 python3 ConstantAmplitude/1_ConstantAmplitude/1_2/Heave/MainKratos.py &> /dev/null 2>&1 &
+
+CPUS_03=$(get_cpu_range  21 $THREADS)
+OMP_NUM_THREADS=$THREADS GOMP_CPU_AFFINITY="$CPUS_03" taskset --cpu-list $CPUS_03 python3 ConstantAmplitude/1_ConstantAmplitude/1_2/Pitch/MainKratos.py &> /dev/null 2>&1 &
+
+# 1_3
+CPUS_04=$(get_cpu_range  28 $THREADS)
+OMP_NUM_THREADS=$THREADS GOMP_CPU_AFFINITY="$CPUS_04" taskset --cpu-list $CPUS_04 python3 ConstantAmplitude/1_ConstantAmplitude/1_3/Heave/MainKratos.py &> /dev/null 2>&1 &
+
+CPUS_05=$(get_cpu_range  35 $THREADS)
+OMP_NUM_THREADS=$THREADS GOMP_CPU_AFFINITY="$CPUS_05" taskset --cpu-list $CPUS_05 python3 ConstantAmplitude/1_ConstantAmplitude/1_3/Pitch/MainKratos.py &> /dev/null 2>&1 &
+
+# 1_4
+CPUS_06=$(get_cpu_range  42 $THREADS)
+OMP_NUM_THREADS=$THREADS GOMP_CPU_AFFINITY="$CPUS_06" taskset --cpu-list $CPUS_06 python3 ConstantAmplitude/1_ConstantAmplitude/1_4/Heave/MainKratos.py &> /dev/null 2>&1 &
+
+CPUS_07=$(get_cpu_range  49 $THREADS)
+OMP_NUM_THREADS=$THREADS GOMP_CPU_AFFINITY="$CPUS_07" taskset --cpu-list $CPUS_07 python3 ConstantAmplitude/1_ConstantAmplitude/1_4/Pitch/MainKratos.py &> /dev/null 2>&1 &
+
+# 1_5
+CPUS_08=$(get_cpu_range  56 $THREADS)
+OMP_NUM_THREADS=$THREADS GOMP_CPU_AFFINITY="$CPUS_08" taskset --cpu-list $CPUS_08 python3 ConstantAmplitude/1_ConstantAmplitude/1_5/Heave/MainKratos.py &> /dev/null 2>&1 &
+
+CPUS_09=$(get_cpu_range  63 $THREADS)
+OMP_NUM_THREADS=$THREADS GOMP_CPU_AFFINITY="$CPUS_09" taskset --cpu-list $CPUS_09 python3 ConstantAmplitude/1_ConstantAmplitude/1_5/Pitch/MainKratos.py &> /dev/null 2>&1 &
+
+# 1_6
+CPUS_10=$(get_cpu_range  70 $THREADS)
+OMP_NUM_THREADS=$THREADS GOMP_CPU_AFFINITY="$CPUS_10" taskset --cpu-list $CPUS_10 python3 ConstantAmplitude/1_ConstantAmplitude/1_6/Heave/MainKratos.py &> /dev/null 2>&1 &
+
+CPUS_11=$(get_cpu_range  77 $THREADS)
+OMP_NUM_THREADS=$THREADS GOMP_CPU_AFFINITY="$CPUS_11" taskset --cpu-list $CPUS_11 python3 ConstantAmplitude/1_ConstantAmplitude/1_6/Pitch/MainKratos.py &> /dev/null 2>&1 &
+
+# 1_7
+CPUS_12=$(get_cpu_range  84 $THREADS)
+OMP_NUM_THREADS=$THREADS GOMP_CPU_AFFINITY="$CPUS_12" taskset --cpu-list $CPUS_12 python3 ConstantAmplitude/1_ConstantAmplitude/1_7/Heave/MainKratos.py &> /dev/null 2>&1 &
+
+CPUS_13=$(get_cpu_range  91 $THREADS)
+OMP_NUM_THREADS=$THREADS GOMP_CPU_AFFINITY="$CPUS_13" taskset --cpu-list $CPUS_13 python3 ConstantAmplitude/1_ConstantAmplitude/1_7/Pitch/MainKratos.py &> /dev/null 2>&1 &
+
+# 1_8
+CPUS_14=$(get_cpu_range  98 $THREADS)
+OMP_NUM_THREADS=$THREADS GOMP_CPU_AFFINITY="$CPUS_14" taskset --cpu-list $CPUS_14 python3 ConstantAmplitude/1_ConstantAmplitude/1_8/Heave/MainKratos.py &> /dev/null 2>&1 &
+
+CPUS_15=$(get_cpu_range 105 $THREADS)
+OMP_NUM_THREADS=$THREADS GOMP_CPU_AFFINITY="$CPUS_15" taskset --cpu-list $CPUS_15 python3 ConstantAmplitude/1_ConstantAmplitude/1_8/Pitch/MainKratos.py &> /dev/null 2>&1 &
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# Wait for all simulations
+wait
+fi

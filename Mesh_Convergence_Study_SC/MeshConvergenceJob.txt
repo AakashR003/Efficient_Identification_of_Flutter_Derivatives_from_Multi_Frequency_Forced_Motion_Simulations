@@ -1,0 +1,77 @@
+#!/bin/bash
+#SBATCH -J TestJob
+#SBATCH -o "/dss/dsshome1/07/ge53liv2/Thesis_Wind/Mesh_Convergence_Study/%x.%j.out"
+#SBATCH -e "/dss/dsshome1/07/ge53liv2/Thesis_Wind/Mesh_Convergence_Study/%x.%j.err"
+#SBATCH -D "/dss/dsshome1/07/ge53liv2/Thesis_Wind/Mesh_Convergence_Study"
+
+#SBATCH --get-user-env
+#SBATCH --clusters=cm4
+#SBATCH --partition=cm4_tiny
+
+#SBATCH --nodes=1
+#SBATCH --cpus-per-task=112
+#SBATCH --ntasks=1
+
+#SBATCH --mail-type=BEGIN,END,FAIL
+#SBATCH --mail-user=aakash.ravichandran@tum.de
+#SBATCH --time=24:00:00
+
+# Load environment
+module load slurm_setup
+source $HOME/setup_files/kratos_coolmuc4_environment.sh
+
+# Set OpenMP
+export OMP_PROC_BIND=TRUE
+
+# -------------------------------
+# Run OpenMP parallel simulations
+# -------------------------------
+
+if [ $SLURM_PROCID == '0' ]; then
+
+# Model 1
+OMP_NUM_THREADS=10 GOMP_CPU_AFFINITY='0,1,2,3,4,5,6,7,8,9' taskset --cpu-list 0,1,2,3,4,5,6,7,8,9 python3 Model_1/Heave/MainKratos.py &> Model_1/Heave/Simulation.log &
+OMP_NUM_THREADS=10 GOMP_CPU_AFFINITY='10,11,12,13,14,15,16,17,18,19' taskset --cpu-list 10,11,12,13,14,15,16,17,18,19 python3 Model_1/Pitch/MainKratos.py &> Model_1/Pitch/Simulation.log &
+
+# Model 2
+OMP_NUM_THREADS=10 GOMP_CPU_AFFINITY='20,21,22,23,24,25,26,27,28,29' taskset --cpu-list 20,21,22,23,24,25,26,27,28,29 python3 Model_2/Heave/MainKratos.py &> Model_2/Heave/Simulation.log &
+OMP_NUM_THREADS=10 GOMP_CPU_AFFINITY='30,31,32,33,34,35,36,37,38,39' taskset --cpu-list 30,31,32,33,34,35,36,37,38,39 python3 Model_2/Pitch/MainKratos.py &> Model_2/Pitch/Simulation.log &
+
+# Model 3
+OMP_NUM_THREADS=10 GOMP_CPU_AFFINITY='40,41,42,43,44,45,46,47,48,49' taskset --cpu-list 40,41,42,43,44,45,46,47,48,49 python3 Model_3/Heave/MainKratos.py &> Model_3/Heave/Simulation.log &
+OMP_NUM_THREADS=10 GOMP_CPU_AFFINITY='50,51,52,53,54,55,56,57,58,59' taskset --cpu-list 50,51,52,53,54,55,56,57,58,59 python3 Model_3/Pitch/MainKratos.py &> Model_3/Pitch/Simulation.log &
+
+# Model 4
+OMP_NUM_THREADS=10 GOMP_CPU_AFFINITY='60,61,62,63,64,65,66,67,68,69' taskset --cpu-list 60,61,62,63,64,65,66,67,68,69 python3 Model_4/Heave/MainKratos.py &> Model_4/Heave/Simulation.log &
+OMP_NUM_THREADS=10 GOMP_CPU_AFFINITY='70,71,72,73,74,75,76,77,78,79' taskset --cpu-list 70,71,72,73,74,75,76,77,78,79 python3 Model_4/Pitch/MainKratos.py &> Model_4/Pitch/Simulation.log &
+
+# Model 5
+OMP_NUM_THREADS=10 GOMP_CPU_AFFINITY='80,81,82,83,84,85,86,87,88,89' taskset --cpu-list 80,81,82,83,84,85,86,87,88,89 python3 Model_5/Heave/MainKratos.py &> Model_5/Heave/Simulation.log &
+OMP_NUM_THREADS=10 GOMP_CPU_AFFINITY='90,91,92,93,94,95,96,97,98,99' taskset --cpu-list 90,91,92,93,94,95,96,97,98,99 python3 Model_5/Pitch/MainKratos.py &> Model_5/Pitch/Simulation.log &
+
+
+
+# Model 1
+OMP_NUM_THREADS=10 python3 Model_1/Heave/MainKratos.py &> Model_1/Heave/Simulation.log &
+OMP_NUM_THREADS=10 python3 Model_1/Pitch/MainKratos.py &> Model_1/Pitch/Simulation.log &
+
+# Model 2
+OMP_NUM_THREADS=10 python3 Model_2/Heave/MainKratos.py &> Model_2/Heave/Simulation.log &
+OMP_NUM_THREADS=10 python3 Model_2/Pitch/MainKratos.py &> Model_2/Pitch/Simulation.log &
+
+# Model 3
+OMP_NUM_THREADS=10 python3 Model_3/Heave/MainKratos.py &> Model_3/Heave/Simulation.log &
+OMP_NUM_THREADS=10 python3 Model_3/Pitch/MainKratos.py &> Model_3/Pitch/Simulation.log &
+
+# Model 4
+OMP_NUM_THREADS=10 python3 Model_4/Heave/MainKratos.py &> Model_4/Heave/Simulation.log &
+OMP_NUM_THREADS=10 python3 Model_4/Pitch/MainKratos.py &> Model_4/Pitch/Simulation.log &
+
+# Model 5
+OMP_NUM_THREADS=10 python3 Model_5/Heave/MainKratos.py &> Model_5/Heave/Simulation.log &
+OMP_NUM_THREADS=10 python3 Model_5/Pitch/MainKratos.py &> Model_5/Pitch/Simulation.log &
+
+# Wait for all simulations to finish
+wait
+
+fi

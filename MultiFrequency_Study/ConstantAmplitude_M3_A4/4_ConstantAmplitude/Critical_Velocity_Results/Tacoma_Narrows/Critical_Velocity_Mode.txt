@@ -1,0 +1,15 @@
+Critical Velocity Analysis 
+
+
+Critical Velocity Analysis for Mode 2
+Critical Velocity: 17.925064386703212 m/s
+Reduced Velocity: 7.8
+Frequency: 1.2133861364445342 rad/s
+Damping: -0.0003272454520512156 rad/s
+
+Critical Velocity Analysis for Mode 1
+Critical Velocity: 22.82118941103565 m/s
+Reduced Velocity: 10.1
+Frequency: 1.1930257259321204 rad/s
+Damping: -0.016235004839522636 rad/s
+
